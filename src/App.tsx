@@ -9,6 +9,7 @@ function App() {
     const { data } = useQuery({
         queryKey: ["summary"],
         queryFn: getSummary,
+        staleTime: 1000 * 60, // 1 minute
     });
 
     return (
