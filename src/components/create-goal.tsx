@@ -7,19 +7,31 @@ import { Label } from "./ui/label";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createGoal } from "../http/create-goal";
+import { useQueryClient } from "@tanstack/react-query";
 
 const createGoalForm = z.object({
     title: z.string().min(1, "Informe o nome da atividade"),
-    frequency: z.coerce.number().min(1).max(7),
+    desiredWeeklyFrequency: z.coerce.number().min(1).max(7),
 });
 
 const CreateGoal = () => {
-    const { register, control, handleSubmit, formState } = useForm<z.infer<typeof createGoalForm>>({
+    const queryClient = useQueryClient();
+
+    const { register, control, handleSubmit, formState, reset } = useForm<z.infer<typeof createGoalForm>>({
         resolver: zodResolver(createGoalForm),
     });
 
-    function handleCreateGoal(data: z.infer<typeof createGoalForm>) {
-        console.log(data);
+    async function handleCreateGoal(data: z.infer<typeof createGoalForm>) {
+        await createGoal({
+            title: data.title,
+            desiredWeeklyFrequency: data.desiredWeeklyFrequency,
+        });
+
+        reset();
+
+        queryClient.invalidateQueries({ queryKey: ["pending-goals"] });
+        queryClient.invalidateQueries({ queryKey: ["summary"] });
     }
 
     return (
@@ -56,7 +68,7 @@ const CreateGoal = () => {
                             <Label htmlFor="title">Quantas vezes na semana?</Label>
                             <Controller
                                 control={control}
-                                name="frequency"
+                                name="desiredWeeklyFrequency"
                                 defaultValue={3}
                                 render={({ field }) => {
                                     return (
@@ -129,7 +141,9 @@ const CreateGoal = () => {
                                 Fechar
                             </Button>
                         </DialogClose>
-                        <Button className="flex-1">Salvar</Button>
+                        <Button type="submit" className="flex-1">
+                            Salvar
+                        </Button>
                     </div>
                 </form>
             </div>
