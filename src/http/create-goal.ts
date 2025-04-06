@@ -1,10 +1,12 @@
+import urlBase from "./urlBase";
+
 interface CreateGoalRequest {
     title: string;
     desiredWeeklyFrequency: number;
 }
 
 export async function createGoal({ title, desiredWeeklyFrequency }: CreateGoalRequest) {
-    await fetch("http://localhost:4545/goals", {
+    await fetch(`${urlBase}/goals`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

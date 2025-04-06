@@ -1,5 +1,7 @@
+import urlBase from "./urlBase";
+
 export async function createGoalCompletion(goalId: string) {
-    await fetch("http://localhost:4545/goals-completions", {
+    await fetch(`${urlBase}/goals-completions`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

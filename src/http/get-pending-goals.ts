@@ -1,3 +1,5 @@
+import urlBase from "./urlBase";
+
 type PendingGoalsResponse = {
     id: string;
     title: string;
@@ -6,7 +8,7 @@ type PendingGoalsResponse = {
 }[];
 
 export async function getPendingGoals(): Promise<PendingGoalsResponse> {
-    const response = await fetch("http://localhost:4545/pending-goals");
+    const response = await fetch(`${urlBase}/pending-goals`);
     const data = await response.json();
 
     return data.pendingGoals;
