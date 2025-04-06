@@ -49,7 +49,7 @@ const CreateGoal = () => {
                     </DialogDescription>
                 </div>
 
-                <form onSubmit={handleSubmit(handleCreateGoal)} className="flex-1 flex flex-col justify-between">
+                <form onSubmit={handleSubmit(handleCreateGoal)} className="flex flex-col justify-between">
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-col gap-2">
                             <Label htmlFor="title">Qual a atividade?</Label>
@@ -135,7 +135,7 @@ const CreateGoal = () => {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 mt-6">
                         <DialogClose asChild>
                             <Button type="button" className="flex-1" variant="secondary">
                                 Fechar
