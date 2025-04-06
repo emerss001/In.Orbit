@@ -4,15 +4,17 @@ import { Button } from "./ui/button";
 import InOrbitIcon from "./in-orbit-icon";
 import { Progress, ProgressIndicator } from "./ui/progress-bar";
 import { Separator } from "./ui/separator";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSummary } from "../http/get-summary";
 import dayjs from "dayjs";
 import ptBR from "dayjs/locale/pt-br";
 import PendingGoals from "./pending-goals";
+import { undoGoalCompletion } from "../http/undo-goal-completion";
 
 dayjs.locale(ptBR);
 
 const Summary = () => {
+    const queryClient = useQueryClient();
     const { data } = useQuery({
         queryKey: ["summary"],
         queryFn: getSummary,
@@ -25,6 +27,12 @@ const Summary = () => {
     const lastDayOfWeek = dayjs().endOf("week").format("D MMM");
 
     const completedPercentage = Math.round((data.completed * 100) / data.total);
+
+    async function handleUndoGoal(goalId: string, createdAt: string) {
+        await undoGoalCompletion(goalId, createdAt);
+        queryClient.invalidateQueries({ queryKey: ["summary"] });
+        queryClient.invalidateQueries({ queryKey: ["pending-goals"] });
+    }
 
     return (
         <div className="py-10 max-w-[480px] px-5 mx-auto flex flex-col gap-6">
@@ -65,6 +73,7 @@ const Summary = () => {
                 <h2 className="text-xl font-medium">Sua semana</h2>
 
                 {Object.entries(data.goalsPerDay).map(([day, goals]) => {
+                    console.log(data);
                     const weekDay = dayjs(day).format("dddd");
                     const formattedDay = dayjs(day).format("D [de] MMMM");
 
@@ -88,7 +97,10 @@ const Summary = () => {
                                                 <span className="text-zinc-100">{time}h</span>
                                             </span>
 
-                                            <span className="text-xs text-zinc-500 underline cursor-pointer hover:text-zinc-300">
+                                            <span
+                                                className="text-xs text-zinc-500 underline cursor-pointer hover:text-zinc-300"
+                                                onClick={() => handleUndoGoal(goal.id, goal.completedAt)}
+                                            >
                                                 Desfazer
                                             </span>
                                         </li>
