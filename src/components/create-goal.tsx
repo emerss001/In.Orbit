@@ -32,6 +32,12 @@ const CreateGoal = () => {
 
         queryClient.invalidateQueries({ queryKey: ["pending-goals"] });
         queryClient.invalidateQueries({ queryKey: ["summary"] });
+
+        // Fecha o diálogo após salvar
+        const dialog = document.querySelector("[data-state='open']");
+        if (dialog) {
+            (dialog as HTMLElement).click(); // Simula o clique no botão de fechar
+        }
     }
 
     return (

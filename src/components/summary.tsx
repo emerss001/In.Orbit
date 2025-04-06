@@ -73,7 +73,6 @@ const Summary = () => {
                 <h2 className="text-xl font-medium">Sua semana</h2>
 
                 {Object.entries(data.goalsPerDay).map(([day, goals]) => {
-                    console.log(data);
                     const weekDay = dayjs(day).format("dddd");
                     const formattedDay = dayjs(day).format("D [de] MMMM");
 

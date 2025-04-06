@@ -12,8 +12,6 @@ function App() {
         staleTime: 1000 * 60, // 1 minute
     });
 
-    console.log(data);
-
     return (
         <Dialog>
             {data?.total && data.total > 0 ? <Summary /> : <EmptyGoals />}
